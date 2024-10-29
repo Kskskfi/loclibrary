@@ -20,6 +20,7 @@ class AuthorAdmin(admin.ModelAdmin):
     inlines = [BooksInline]
 
 
+
 class BooksInstanceInline(admin.TabularInline):
     model = BookInstance
 
