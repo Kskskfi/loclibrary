@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Book, Author, BookInstance, Genre , Language
+from .models import Book, Author, BookInstance, Genre , Language,Publisher
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
 from django.contrib.auth.decorators import permission_required
@@ -56,6 +56,15 @@ class AuthorListView(generic.ListView):
 class AuthorDetailView(generic.DetailView):
     """Generic class-based detail view for an author."""
     model = Author
+
+class PublisherListView(generic.ListView):
+    """Generic class-based list view for a list of authors."""
+    model = Publisher
+    paginate_by = 10
+
+class PublisherDetailView(generic.DetailView):
+    """Generic class-based detail view for an author."""
+    model = Publisher
 
 class BookInstanceListView(generic.ListView):
     """Generic class-based view for a list of books."""
@@ -167,15 +176,54 @@ class AuthorDelete(DeleteView):
                 reverse("author-delete", kwargs={"pk": self.object.pk})
             )
 
+class GenreCreate(PermissionRequiredMixin, CreateView):
+    model = Genre
+    fields = ['name', ]
+    permission_required = 'catalog.add_genre'
+
+
+class GenreUpdate(PermissionRequiredMixin, UpdateView):
+    model = Genre
+    fields = ['name', ]
+    permission_required = 'catalog.change_genre'
+
+
+class GenreDelete(PermissionRequiredMixin, DeleteView):
+    model = Genre
+    success_url = reverse_lazy('genres')
+    permission_required = 'catalog.delete_genre'
+
+class PublisherCreate(CreateView):
+    model = Publisher
+    fields = ['publisher_name', 'city']
+    permission_required = 'catalog.publisher'
+
+class PublisherUpdate(UpdateView):
+    model = Publisher
+    fields = ['publisher_name', 'city']
+
+class PublisherDelete(DeleteView):
+    model = Publisher
+    success_url = reverse_lazy('publisher')
+
+    def form_valid(self, form):
+        try:
+            self.object.delete()
+            return HttpResponseRedirect(self.success_url)
+        except Exception as e:
+            return HttpResponseRedirect(
+                reverse("publisher-delete", kwargs={"pk": self.object.pk})
+            )
+
 class BookCreate(PermissionRequiredMixin, CreateView):
     model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language', 'publisher']
     permission_required = 'catalog.add_book'
 
 
 class BookUpdate(PermissionRequiredMixin, UpdateView):
     model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language', 'publisher']
     permission_required = 'catalog.change_book'
 
 

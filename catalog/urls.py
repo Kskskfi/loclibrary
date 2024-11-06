@@ -26,6 +26,20 @@ urlpatterns += [
     path('book/<int:pk>/update/', views.BookUpdate.as_view(), name='book-update'),
     path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
 ]
+urlpatterns += [
+    path('genres/', views.GenreListView.as_view(), name='genres'),
+    path('genre/<int:pk>', views.GenreDetailView.as_view(), name='genre-detail'),
+    path('genre/create/', views.GenreCreate.as_view(), name='genre-create'),
+    path('genre/<int:pk>/update/', views.GenreUpdate.as_view(), name='genre-update'),
+    path('genre/<int:pk>/delete/', views.GenreDelete.as_view(), name='genre-delete'),
+]
+
+urlpatterns += [
+    path('publisher/create/', views.PublisherCreate.as_view(), name='publisher-create'),
+    path('publisher/<int:pk>',views.PublisherDetailView.as_view(), name='publisher-detail'),
+    path('publisher/<int:pk>/update/', views.PublisherUpdate.as_view(), name='publisher-update'),
+    path('publisher/<int:pk>/delete/', views.PublisherDelete.as_view(), name='publisher-delete'),
+]
 
 
 # Add URLConf to list, view, create, update, and delete genre
